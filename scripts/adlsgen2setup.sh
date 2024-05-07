@@ -1,5 +1,6 @@
  #!/bin/sh
 
+
 . ./scripts/loadenv.sh
 
 if [ -n "$AZURE_ADLS_GEN2_STORAGE_ACCOUNT" ]; then

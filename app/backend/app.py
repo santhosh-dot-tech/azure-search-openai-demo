@@ -573,9 +573,9 @@ def create_app():
         app.asgi_app = OpenTelemetryMiddleware(app.asgi_app)  # type: ignore[assignment]
 
     # Level should be one of https://docs.python.org/3/library/logging.html#logging-levels
-    default_level = "INFO"  # In development, log more verbosely
+    default_level = "DEBUG"  # In development, log more verbosely
     if os.getenv("WEBSITE_HOSTNAME"):  # In production, don't log as heavily
-        default_level = "WARNING"
+        default_level = "DEBUG"
     logging.basicConfig(level=os.getenv("APP_LOG_LEVEL", default_level))
 
     if allowed_origin := os.getenv("ALLOWED_ORIGIN"):
