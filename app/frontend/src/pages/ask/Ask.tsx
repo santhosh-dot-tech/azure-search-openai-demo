@@ -78,8 +78,6 @@ export function Component(): JSX.Element {
         setActiveAnalysisPanelTab(undefined);
 
         const token = client ? await getToken(client) : undefined;
-        console.log("tokenPrint");
-        console.log(token);
 
         try {
             const request: ChatAppRequest = {

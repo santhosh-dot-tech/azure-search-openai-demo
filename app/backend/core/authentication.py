@@ -119,13 +119,11 @@ class AuthenticationHelper:
                 raise AuthError(error="Authorization header must be Bearer token", status_code=401)
 
             token = parts[1]
-            logging.info("1 Token in get_auth_setup_for_client method %s", token)
             return token
 
         # App services built-in authentication passes the access token directly as a header
         # To learn more, please visit https://learn.microsoft.com/azure/app-service/configure-authentication-oauth-tokens
         token = headers.get("x-ms-token-aad-access-token")
-        logging.info("2 Token in get_auth_setup_for_client method %s", token)
         if token:
             return token
 
@@ -167,7 +165,6 @@ class AuthenticationHelper:
     @staticmethod
     async def list_groups(graph_resource_access_token: dict) -> list[str]:
         headers = {"Authorization": "Bearer " + graph_resource_access_token["access_token"]}
-        logging.info("3 header in list_group %s", headers)
         groups = []
         async with aiohttp.ClientSession(headers=headers) as session:
             resp_json = None
@@ -202,7 +199,6 @@ class AuthenticationHelper:
             # The scope is set to the Microsoft Graph API, which may need to be called for more authorization information
             # https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-on-behalf-of-flow
             auth_token = AuthenticationHelper.get_token_auth_header(headers)
-            logging.info("4 Token in get_auth_setup_for_client method %s", auth_token)
             # Validate the token before use
             await self.validate_access_token(auth_token)
 
@@ -218,7 +214,6 @@ class AuthenticationHelper:
             # https://learn.microsoft.com/azure/active-directory/develop/id-token-claims-reference
             id_token_claims = graph_resource_access_token["id_token_claims"]
             auth_claims = {"oid": id_token_claims["oid"], "groups": id_token_claims.get("groups", [])}
-            logging.info("5 Claim in get_auth_setup_for_client method %s", auth_claims)
 
             # A groups claim may have been omitted either because it was not added in the application manifest for the API application,
             # or a groups overage claim may have been emitted.
@@ -275,7 +270,6 @@ class AuthenticationHelper:
         """
         Validate an access token is issued by Entra
         """
-        logging.info("6 validate token %s", token)
         jwks = None
         async for attempt in AsyncRetrying(
             retry=retry_if_exception_type(AuthError),
